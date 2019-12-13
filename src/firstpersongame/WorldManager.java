@@ -9,7 +9,7 @@ public class WorldManager
 	public Level level;
 	public boolean mode2d;
 	public final float fov = 45;
-	public final int numOfRays = 90;
+	public final int numOfRays = 180;
 	
 	void draw()
 	{

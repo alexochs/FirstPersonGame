@@ -16,7 +16,8 @@ public class Ray
 	{
 		float dx = Math.abs(x - world.player.x);
 		float dy = Math.abs(y - world.player.y);
-		return (float)(Math.sqrt((dx*dx) + (dy*dy)));
+		float angle = (float)(-PConstants.QUARTER_PI + (PConstants.PI/world.numOfRays/2 * degree));
+		return (float)(Math.sqrt((dx*dx) + (dy*dy)) * Math.cos(angle)); //whack fisheye method
 	}
 	
 	boolean didHitWall()
