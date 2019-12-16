@@ -9,6 +9,9 @@ public class Player extends Entity
 	private float speed;
 	private boolean moveForward, moveBackward;
 	private boolean turnRight, turnLeft;
+	public Vector direction;
+	public Vector plane;
+	public float planeDist;
 	
 	private float[] checkBounds(float oldX, float newX, float oldY, float newY)
 	{
@@ -37,10 +40,10 @@ public class Player extends Entity
 	{
 		//maybe clamp?
 		if(turnRight)
-			angle += PConstants.PI/90;
+			angle += PConstants.PI/45;
 		
 		if(turnLeft)
-			angle -= PConstants.PI/90;
+			angle -= PConstants.PI/45;
 	}
 	
 	private void move()
@@ -49,21 +52,21 @@ public class Player extends Entity
 		float newX, newY; newX = newY = 0; 
 		if(moveForward)
 		{
-			newX = x + (float)(Math.cos(angle) * speed);
-			newY = y + (float)(Math.sin(angle) * speed);
+			newX = pos.x + direction.x * speed;
+			newY = pos.y + direction.y * speed;
 		}
 		if(moveBackward)
 		{
-			newX = x - (float)(Math.cos(angle) * speed);
-			newY = y - (float)(Math.sin(angle) * speed);
+			newX = pos.x - direction.x * speed;
+			newY = pos.y - direction.y * speed;
 		}
 		
 		//Check for bounds and return position
-		float[] pos = checkBounds(x, newX, y, newY);
+		float[] pos = checkBounds(this.pos.x, newX, this.pos.y, newY);
 		
 		//Set new position
-		x = pos[0];
-		y = pos[1];
+		this.pos.x = pos[0];
+		this.pos.y = pos[1];
 	}
 	
 	public void tick()
@@ -73,15 +76,29 @@ public class Player extends Entity
 		
 		if(moveForward || moveBackward)
 			move();
+		
+		//Calculate direction vector depending on speed and angle
+		direction.x = (float)(Math.cos(angle) - Math.sin(angle));
+		direction.y = (float)(Math.sin(angle) + Math.cos(angle));
+		
+		//Calculate camera plane
+		float rot = (float)Math.toRadians(90);
+		plane.x = (float)(Math.cos(angle+rot) - Math.sin(angle+rot));
+		plane.y = (float)(Math.sin(angle+rot) + Math.cos(angle+rot));
 	}
 	
 	private void draw2D()
 	{
 		//Player
 		p.fill(0, 255, 0);
-		p.circle(x, y, 20);
+		p.circle(pos.x, pos.y, 10);
 		p.stroke(10);
-		p.line(x, y, (x + (float)(Math.cos(angle) * 25)), (y + (float)(Math.sin(angle) * 25)));
+		
+		//Direction Line
+		p.line(pos.x, pos.y, pos.x + direction.x*planeDist, pos.y + direction.y*planeDist);
+		
+		//Camera Plane Line
+		p.line(pos.x+direction.x*planeDist-plane.x*planeDist/2, pos.y+direction.y*planeDist-plane.y*planeDist/2, pos.x+direction.x*planeDist+plane.x*planeDist/2, pos.y+direction.y*planeDist+plane.y*planeDist/2);
 	}
 	
 	private void draw3D()
@@ -96,9 +113,10 @@ public class Player extends Entity
 		//Draw Info
 		p.fill(0, 102, 153);
 		p.textSize(16);
-		p.text("X:" + x + "   Y: " + y, 50, 50);
+		p.text("X:" + pos.x + "   Y: " + pos.y, 50, 50);
 		p.text("Angle: " + angle, 50, 82);
-		p.text("FPS: " + p.frameRate, 50, 114);
+		p.text("Direction XY: " + direction.x + " " + direction.y, 50, 114);
+		p.text("FPS: " + p.frameRate, 50, 130);
 		
 		if(world.mode2d)
 			draw2D();
@@ -139,8 +157,11 @@ public class Player extends Entity
 	Player(PApplet p, WorldManager world, float x, float y)
 	{
 		super(p, world, x, y);
+		direction = new Vector();
+		plane = new Vector();
 		angle = 0;
-		speed = 8;
+		speed = 4;
+		planeDist = 30;
 	}
 	
 }

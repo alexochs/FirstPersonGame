@@ -16,7 +16,7 @@ public class FirstPersonGame extends PApplet
 	public void settings()
 	{
 		//size(displayWidth, displayHeight);
-		size(800, 600);
+		size(640, 480);
 	}
 	
 	public void setup() 

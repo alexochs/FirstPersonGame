@@ -9,7 +9,7 @@ public class WorldManager
 	public Level level;
 	public boolean mode2d;
 	public final float fov = 45;
-	public final int numOfRays = 180;
+	public final int numOfRays = 90;
 	
 	void draw()
 	{
@@ -34,7 +34,7 @@ public class WorldManager
 	{
 		this.p = p;
 		this.mode2d = false;
-		player = new Player(p, this, 310, 140);
+		player = new Player(p, this, 128, 128);
 		String map = "2222222222211111111221111111122222122222211111111221111111122111111112211111111221111111122222222222";
 		level = new Level(p, this, map, 10, 10);
 	}

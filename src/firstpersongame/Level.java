@@ -15,8 +15,8 @@ public class Level
 	private void tick()
 	{
 		//Create Rays
-		rays = new Ray[(int)world.numOfRays+1];
-		for(int i = 0; i < rays.length; i++)
+		rays = new Ray[p.width];
+		for(int i = 0; i < p.width; i++)
 		{
 			rays[i] = new Ray(p, world, i);
 		}
@@ -32,7 +32,7 @@ public class Level
 			if(ray.length == -1)
 				continue;
 			
-			p.line(world.player.x, world.player.y, ray.x, ray.y);
+			p.line(world.player.pos.x, world.player.pos.y, ray.x, ray.y);
 		}
 	}
 	

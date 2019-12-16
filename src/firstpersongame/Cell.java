@@ -15,7 +15,7 @@ public class Cell
 	private float x, y;
 	public CellType type;
 	public int color;
-	private float width, height;
+	public float width, height;
 	public float[] bounds = new float[4];
 	public float[] screenX = new float[2];
 	public float[] screenY = new float[2];
@@ -54,7 +54,7 @@ public class Cell
 	{
 		this.p = p;
 		this.type = parseType(type);
-		width = height = 64;
+		width = height = 32;
 		this.x = x*width;
 		this.y = y*height;
 		bounds[0] = this.x;

@@ -10,14 +10,18 @@ public class Ray
 	float x, y;
 	Cell hitCell;
 	float length;
-	float degree;
+	float screenX;
+	float angle;
+	float step;
 	
 	float calculateLength()
 	{
-		float dx = Math.abs(x - world.player.x);
-		float dy = Math.abs(y - world.player.y);
-		float angle = (float)(-PConstants.QUARTER_PI + (PConstants.PI/world.numOfRays/2 * degree));
-		return (float)(Math.sqrt((dx*dx) + (dy*dy)) * Math.cos(angle)); //whack fisheye method
+		//float dx = Math.abs(x - world.player.pos.x);
+		//float dy = Math.abs(y - world.player.pos.y);
+		//float hypo = (float)(Math.sqrt((dx*dx) + (dy*dy)));
+		float adj = (float)(Math.sqrt((world.player.direction.x*world.player.direction.x) + (world.player.direction.y*world.player.direction.y)));
+		//return hypo;
+		return adj*step;
 	}
 	
 	boolean didHitWall()
@@ -41,27 +45,27 @@ public class Ray
 		return false;
 	}
 	
-	void cast(int deg)
-	{
-		//Setup
-		float step = 1;
-		deg++;
-		
+	void cast()
+	{	
 		//Calculate Ray
-		x = world.player.x + (float)(Math.cos((world.player.angle) * step));
-		y = world.player.y + (float)(Math.sin((world.player.angle) * step));
+		float camX = 2 * screenX/p.width - 1;
+		float dirX = (float)(world.player.direction.x + world.player.plane.x*0.66*camX);
+		float dirY = (float)(world.player.direction.y + world.player.plane.y*0.66*camX);
+		
+		x = (float)(world.player.pos.x + dirX * step);
+		y = (float)(world.player.pos.y + dirY * step);
 		
 		//Continue to extend Ray till we hit a wall
 		while(!didHitWall())
 		{
-			if(step > 1000)
+			if(step > 500)
 			{
 				length = -1;
 				return;
 			}
-			
-			x = world.player.x + (float)(Math.cos(world.player.angle + (-PConstants.QUARTER_PI + (PConstants.PI/world.numOfRays/2 * deg))) * step);
-			y = world.player.y + (float)(Math.sin(world.player.angle + (-PConstants.QUARTER_PI + (PConstants.PI/world.numOfRays/2 * deg))) * step);
+
+			x = (float)(world.player.pos.x + dirX * step);
+			y = (float)(world.player.pos.y + dirY * step);
 			
 			step++;
 		}
@@ -69,19 +73,14 @@ public class Ray
 	
 	void draw()
 	{
-		//TODO: fix fisheye (euclidean angle), draw far to near
-		
 		if(length == -1)
 			return;
 		
-		float xLeft = degree/world.numOfRays * p.width;
-		float xRight = xLeft + p.width/world.fov;
-		float yTop = p.height/2 - (p.height/(length/64));
-		float yBottom = p.height/2 + (p.height/(length/64));
-		
-		p.fill(hitCell.color - ((float)(length/1.5)));
-		p.quad(xLeft, yTop, xRight, yTop, xRight, yBottom, xLeft, yBottom);
+		float height = (p.height/(length/hitCell.height));
+		float screenMid = p.height/2;
+		p.stroke(hitCell.color - ((float)(length)));
+		p.line(screenX, screenMid-height/2, screenX, screenMid+height/2);
 	}
 	
-	Ray(PApplet p, WorldManager world, int deg) { this.p = p; this.world = world; x = y = 0; hitCell = null; length = 0; degree = deg; cast(deg); }
+	Ray(PApplet p, WorldManager world, int curX) { this.p = p; this.world = world; x = y = 0; hitCell = null; length = 0; screenX = curX; this.step = 1; cast(); }
 }
