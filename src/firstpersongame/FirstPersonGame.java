@@ -16,12 +16,13 @@ public class FirstPersonGame extends PApplet
 	public void settings()
 	{
 		//size(displayWidth, displayHeight);
-		size(640, 480);
+		size(320, 200);
 	}
 	
 	public void setup() 
 	{
 		game = new GameManager(this);
+		frameRate(30);
 	}
 
 	public void draw() 

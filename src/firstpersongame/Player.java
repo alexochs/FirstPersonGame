@@ -40,10 +40,10 @@ public class Player extends Entity
 	{
 		//maybe clamp?
 		if(turnRight)
-			angle += PConstants.PI/45;
+			angle += PConstants.PI/30;
 		
 		if(turnLeft)
-			angle -= PConstants.PI/45;
+			angle -= PConstants.PI/30;
 	}
 	
 	private void move()
@@ -111,12 +111,12 @@ public class Player extends Entity
 		tick();
 		
 		//Draw Info
-		p.fill(0, 102, 153);
-		p.textSize(16);
-		p.text("X:" + pos.x + "   Y: " + pos.y, 50, 50);
-		p.text("Angle: " + angle, 50, 82);
-		p.text("Direction XY: " + direction.x + " " + direction.y, 50, 114);
-		p.text("FPS: " + p.frameRate, 50, 130);
+		//p.fill(0, 102, 153);
+		//p.textSize(16);
+		//p.text("X:" + pos.x + "   Y: " + pos.y, 50, 50);
+		//p.text("Angle: " + angle, 50, 82);
+		//p.text("Direction XY: " + direction.x + " " + direction.y, 50, 114);
+		//p.text("FPS: " + p.frameRate, 50, 130);
 		
 		if(world.mode2d)
 			draw2D();
@@ -160,7 +160,7 @@ public class Player extends Entity
 		direction = new Vector();
 		plane = new Vector();
 		angle = 0;
-		speed = 4;
+		speed = 2;
 		planeDist = 30;
 	}
 	

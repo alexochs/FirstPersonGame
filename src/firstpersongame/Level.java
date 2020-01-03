@@ -38,9 +38,10 @@ public class Level
 	
 	private void draw3D()
 	{
+		//p.fill(0);
 		p.fill(7, 11, 52);
 		p.rect(0, 0, p.width, p.height/2);
-		p.fill(50);
+		p.fill(100);
 		p.rect(0, p.height/2, p.width, p.height);
 		
 		for(Ray ray : rays)
